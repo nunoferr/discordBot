@@ -34,14 +34,14 @@ client.on('message', message => {
 
 /* Calls the function related to a specific command with the necessary parameters. */
 function commandsMenu(message) {
-    var commandsList = {
+    const commandsList = {
         sayHi: sayHif,
         joke: tellMeAJoke,
         purge: purgeMessages,
         help: helpMessage
     }
-    var [command, ...args] = message.content.substring(PREFIX.length).split(" ");
-    var params = [message, args];
+    const [command, ...args] = message.content.substring(PREFIX.length).split(" ");
+    const params = [message, args];
     if (commandsList[command] !== undefined) {
         commandsList[command].apply(null, params);
     } else {
@@ -77,7 +77,7 @@ function embeededMessage(title = '', description = '', fields = [], color = '#00
 
 /* Says hello to users in a happy way. */
 function sayHif(message, args = []) {
-    messages = [
+    const messages = [
         'how is your day going?',
         'hope you are having a wonderful day!',
         'someone looks happy today!',
@@ -110,7 +110,7 @@ function tellMeAJoke(message, args = []) {
         }
     };
 
-    jokes = [
+    const jokes = [
         new jokeItem("What's the best thing about Switzerland?",
             "I don't know, but their flag is a huge plus."),
         new jokeItem("I used to be addicted to soap. But I'm clean now.")
