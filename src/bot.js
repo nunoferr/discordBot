@@ -11,7 +11,16 @@ client.login(process.env.BOT_TOKEN);
 /* Called when the bot logs in (executes) */
 client.on('ready', () => {
     console.log(`${client.user.username} is online!`);
+});
 
+/* Changes the bot status randomly and makes it pretendo to be live */
+client.on('ready', () => {
+    const status = [
+        'Partying',
+        'Having dinner brb',
+        'I need my coffee'
+    ];
+    setInterval(() => client.user.setActivity(`${status[Math.floor(Math.random() * status.length)]}`, {type:"STREAMING",url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"}), 5000)
 });
 
 
