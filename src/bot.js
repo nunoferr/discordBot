@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const client = new Discord.Client();
 
-const PREFIX = "<";
+const BOT_PREFIX = "!";
 
 /* Executes the bot */
 client.login(process.env.BOT_TOKEN);
@@ -26,7 +26,7 @@ client.on('ready', () => {
 
 /* Reads all sent messages and verifies if a command was called */
 client.on('message', message => {
-    if (!message.content.startsWith(PREFIX)) return;
+    if (!message.content.startsWith(BOT_PREFIX)) return;
     if (message.author.bot) return; // bots shouldn't execute commands
     commandsMenu(message);
 });
@@ -40,8 +40,8 @@ function commandsMenu(message) {
         purge: purgeMessages,
         help: helpMessage
     }
-    const [command, ...args] = message.content.substring(PREFIX.length).split(" ");
-    const params = [message, args];
+    var [command, ...args] = message.content.substring(BOT_PREFIX.length).split(" ");
+    var params = [message, args];
     if (commandsList[command] !== undefined) {
         commandsList[command].apply(null, params);
     } else {
@@ -81,11 +81,11 @@ function sayHif(message, args = []) {
         'how is your day going?',
         'hope you are having a wonderful day!',
         'someone looks happy today!',
-        'want to hear a joke? Type: ' + PREFIX + 'joke' 
+        'want to hear a joke? Type: ' + BOT_PREFIX + 'joke' 
     ];
 
     if (args[0] === 'help') {
-        message.channel.send(`Use: ${PREFIX}sayHi.`);
+        message.channel.send(`Use: ${BOT_PREFIX}sayHi.`);
         return;
     }
 
@@ -117,7 +117,7 @@ function tellMeAJoke(message, args = []) {
     ];
 
     if (args[0] === 'help') {
-        message.channel.send(`Use: ${PREFIX}joke`);
+        message.channel.send(`Use: ${BOT_PREFIX}joke`);
         return;
     }
     var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
@@ -138,7 +138,7 @@ function purgeMessages(message, args = []) {
     }
 
     if (args[0] === 'help') {
-        message.channel.send(`Use: ${PREFIX}purge (count).`);
+        message.channel.send(`Use: ${BOT_PREFIX}purge (count).`);
         return;
     }
 
@@ -161,9 +161,9 @@ function purgeMessages(message, args = []) {
 /* Shows the help dialog */
 function helpMessage(message, args = []) {
     var helpMessages = [
-        ['Say hello:', `${PREFIX}SayHi help`],
-        ['Request a joke:', `${PREFIX}joke help`],
-        ['Purge messages:', `${PREFIX}purge help`]
+        ['Say hello:', `${BOT_PREFIX}SayHi help`],
+        ['Request a joke:', `${BOT_PREFIX}joke help`],
+        ['Purge messages:', `${BOT_PREFIX}purge help`]
     ];
     var embeededMsg = embeededMessage('Help!', 'Hello there, you may find this information useful.', helpMessages);
     message.channel.send(embeededMsg);
