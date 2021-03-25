@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 
-const PREFIX = "?";
+const PREFIX = "<";
 
 client.on('ready', () => {
     console.log(`${client.user.username} is online!`);
@@ -21,7 +21,8 @@ client.on('message', message => {
 function commandsMenu(message) {
     var commandsList = {
         sayHi: sayHif,
-        joke: tellMeAJoke
+        joke: tellMeAJoke,
+        purge: purgeMessages
     }
     var [command, ...args] = message.content.substring(PREFIX.length).split(" ");
     var params = [message, args];
@@ -53,7 +54,8 @@ function tellMeAJoke(message, args = []) {
                 return this.joke;
             }
         }
-    }
+    };
+
     jokes = [
         new jokeItem("What's the best thing about Switzerland?",
             "I don't know, but their flag is a huge plus."),
@@ -61,4 +63,27 @@ function tellMeAJoke(message, args = []) {
     ];
     var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     message.channel.send(randomJoke.printJoke());
+}
+
+function purgeMessages(message, args = []) {
+    const maxPurge = 100;
+
+    if (!(args.length > 0)) {
+        message.channel.send("Please provide a valid number of messages to purge");
+        return;
+    }
+
+    if (isNaN(args[0])) {
+        message.channel.send("Please provide a valid number of messages to purge");
+        return;
+    }
+    var toPurgeNum = parseInt(args[0]);
+
+    if (toPurgeNum <= 0 && toPurgeNum > maxPurge) {
+        message.channel.send(`Sorry, the number of purge messages must be between 0 and ${maxPurge}.`);
+        return;
+    }
+    toPurgeNum++;
+
+    message.channel.messages.fetch({ limit: toPurgeNum }).then(messages => message.channel.bulkDelete(messages, true));
 }
