@@ -22,11 +22,24 @@ function commandsMenu(message) {
     var commandsList = {
         sayHi: sayHif,
         joke: tellMeAJoke,
-        purge: purgeMessages
+        purge: purgeMessages,
+        help: helpMessage
     }
     var [command, ...args] = message.content.substring(PREFIX.length).split(" ");
     var params = [message, args];
     commandsList[command].apply(null, params);
+}
+
+function embeededMessage(title = '', description = '', fields = [], color = '#0099ff') {
+    var embeededMsg = new Discord.MessageEmbed()
+    .setColor(color)
+	.setTitle(title)
+	.setDescription(description);
+    
+    fields.forEach(function(field) {
+        embeededMsg.addField(field[0], field[1]);
+    });
+    return embeededMsg;
 }
 
 function sayHif(message, args = []) {
@@ -36,6 +49,12 @@ function sayHif(message, args = []) {
         'someone looks happy today!',
         'want to hear a joke? Type: ' + PREFIX + 'joke' 
     ];
+
+    if (args[0] === 'help') {
+        message.channel.send(`Use: ${PREFIX}sayHi.`);
+        return;
+    }
+
     message.channel.send(`Hello ${message.author}, ${messages[Math.floor(Math.random() * messages.length)]}`);
 }
 
@@ -61,6 +80,11 @@ function tellMeAJoke(message, args = []) {
             "I don't know, but their flag is a huge plus."),
         new jokeItem("I used to be addicted to soap. But I'm clean now.")
     ];
+
+    if (args[0] === 'help') {
+        message.channel.send(`Use: ${PREFIX}joke`);
+        return;
+    }
     var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
     message.channel.send(randomJoke.printJoke());
 }
@@ -69,12 +93,17 @@ function purgeMessages(message, args = []) {
     const maxPurge = 100;
 
     if (!(args.length > 0)) {
-        message.channel.send("Please provide a valid number of messages to purge");
+        message.channel.send(`Please provide a valid number of messages to purge.`);
+        return;
+    }
+
+    if (args[0] === 'help') {
+        message.channel.send(`Use: ${PREFIX}purge (count).`);
         return;
     }
 
     if (isNaN(args[0])) {
-        message.channel.send("Please provide a valid number of messages to purge");
+        message.channel.send(`Please provide a valid number of messages to purge.`);
         return;
     }
     var toPurgeNum = parseInt(args[0]);
@@ -86,4 +115,14 @@ function purgeMessages(message, args = []) {
     toPurgeNum++;
 
     message.channel.messages.fetch({ limit: toPurgeNum }).then(messages => message.channel.bulkDelete(messages, true));
+}
+
+function helpMessage(message, args = []) {
+    var helpMessages = [
+        ['Say hello:', `${PREFIX}SayHi help`],
+        ['Request a joke:', `${PREFIX}joke help`],
+        ['Purge messages:', `${PREFIX}purge help`]
+    ];
+    var embeededMsg = embeededMessage('Help!', 'Hello there, you may find this information useful.', helpMessages);
+    message.channel.send(embeededMsg);
 }
