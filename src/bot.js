@@ -40,17 +40,25 @@ function sayHif(message, args = []) {
 
 
 function tellMeAJoke(message, args = []) {
-    function jokeItem(joke, answer) {
-        this.joke = joke;
-        this.answer = answer;
+    class jokeItem {
+        constructor(joke, answer = null) {
+            this.joke = joke;
+            this.answer = answer;
+        }
+
+        printJoke() {
+            if (this.answer !== null) {
+                return "Q: " + this.joke + "\nA: " + this.answer;
+            } else {
+                return this.joke;
+            }
+        }
     }
     jokes = [
         new jokeItem("What's the best thing about Switzerland?",
             "I don't know, but their flag is a huge plus."),
-        new jokeItem("What's the best thing about Switzerland?",
-            "I don't know, but their flag is a huge plus.")
+        new jokeItem("I used to be addicted to soap. But I'm clean now.")
     ];
     var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-    message.channel.send("Q: " + randomJoke.joke);
-    message.channel.send("A: " + randomJoke.answer);
+    message.channel.send(randomJoke.printJoke());
 }
