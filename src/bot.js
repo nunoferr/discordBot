@@ -20,7 +20,8 @@ client.on('message', message => {
 
 function commandsMenu(message) {
     var commandsList = {
-        sayHi: sayHif
+        sayHi: sayHif,
+        joke: tellMeAJoke
     }
     var [command, ...args] = message.content.substring(PREFIX.length).split(" ");
     var params = [message, args];
@@ -35,4 +36,21 @@ function sayHif(message, args = []) {
         'want to hear a joke? Type: ' + PREFIX + 'joke' 
     ];
     message.channel.send(`Hello ${message.author}, ${messages[Math.floor(Math.random() * messages.length)]}`);
+}
+
+
+function tellMeAJoke(message, args = []) {
+    function jokeItem(joke, answer) {
+        this.joke = joke;
+        this.answer = answer;
+    }
+    jokes = [
+        new jokeItem("What's the best thing about Switzerland?",
+            "I don't know, but their flag is a huge plus."),
+        new jokeItem("What's the best thing about Switzerland?",
+            "I don't know, but their flag is a huge plus.")
+    ];
+    var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+    message.channel.send("Q: " + randomJoke.joke);
+    message.channel.send("A: " + randomJoke.answer);
 }
