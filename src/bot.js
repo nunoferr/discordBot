@@ -35,13 +35,14 @@ client.on('message', message => {
 /* Calls the function related to a specific command with the necessary parameters. */
 function commandsMenu(message) {
     const commandsList = {
-        sayHi: sayHif,
+        sayhi: sayHif,
         joke: tellMeAJoke,
         purge: purgeMessages,
         help: helpMessage
     }
     var [command, ...args] = message.content.substring(BOT_PREFIX.length).split(" ");
     var params = [message, args];
+    command = command.toLowerCase();
     if (commandsList[command] !== undefined) {
         commandsList[command].apply(null, params);
     } else {
