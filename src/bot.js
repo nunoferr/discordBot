@@ -1,23 +1,29 @@
-require('dotenv').config();
 const Discord = require('discord.js');
+require('dotenv').config();
 
 const client = new Discord.Client();
 
 const PREFIX = "<";
 
+/* Executes the bot */
+client.login(process.env.BOT_TOKEN);
+
+/* Called when the bot logs in (executes) */
 client.on('ready', () => {
     console.log(`${client.user.username} is online!`);
 
 });
 
-client.login(process.env.BOT_TOKEN);
 
+/* Reads all sent messages and verifies if a command was called */
 client.on('message', message => {
     if (!message.content.startsWith(PREFIX)) return;
     if (message.author.bot) return; // bots shouldn't execute commands
     commandsMenu(message);
 });
 
+
+/* Calls the function related to a specific command with the necessary parameters. */
 function commandsMenu(message) {
     var commandsList = {
         sayHi: sayHif,
@@ -34,6 +40,19 @@ function commandsMenu(message) {
     }
 }
 
+
+/* Creates a dialog (MessageEmbed)
+ *
+ * @string  ?title
+ * 
+ * @string  ?description
+ * 
+ * @array[@string name, @string value]  ?fields   - Fields to add to the embeeded message
+ * 
+ * @string  ?color  - Left bar color
+ * 
+ * return   Discord.MessageEmbed()  ?embeededMsg    - Message dialog
+ */
 function embeededMessage(title = '', description = '', fields = [], color = '#0099ff') {
     var embeededMsg = new Discord.MessageEmbed()
     .setColor(color)
@@ -46,6 +65,8 @@ function embeededMessage(title = '', description = '', fields = [], color = '#00
     return embeededMsg;
 }
 
+
+/* Says hello to users in a happy way. */
 function sayHif(message, args = []) {
     messages = [
         'how is your day going?',
@@ -63,6 +84,7 @@ function sayHif(message, args = []) {
 }
 
 
+/* Sends a joke inside a channel. */
 function tellMeAJoke(message, args = []) {
     class jokeItem {
         constructor(joke, answer = null) {
@@ -93,6 +115,11 @@ function tellMeAJoke(message, args = []) {
     message.channel.send(randomJoke.printJoke());
 }
 
+
+/* Sends a joke inside a channel.
+ *
+ * @int args[0] toPurgeNum - Number of messages to purge
+ */
 function purgeMessages(message, args = []) {
     const maxPurge = 100;
 
@@ -121,6 +148,8 @@ function purgeMessages(message, args = []) {
     message.channel.messages.fetch({ limit: toPurgeNum }).then(messages => message.channel.bulkDelete(messages, true));
 }
 
+
+/* Shows the help dialog */
 function helpMessage(message, args = []) {
     var helpMessages = [
         ['Say hello:', `${PREFIX}SayHi help`],
