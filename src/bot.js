@@ -27,7 +27,11 @@ function commandsMenu(message) {
     }
     var [command, ...args] = message.content.substring(PREFIX.length).split(" ");
     var params = [message, args];
-    commandsList[command].apply(null, params);
+    if (commandsList[command] !== undefined) {
+        commandsList[command].apply(null, params);
+    } else {
+        message.channel.send(embeededMessage('Error', 'Command not found. :/'));
+    }
 }
 
 function embeededMessage(title = '', description = '', fields = [], color = '#0099ff') {
@@ -35,7 +39,7 @@ function embeededMessage(title = '', description = '', fields = [], color = '#00
     .setColor(color)
 	.setTitle(title)
 	.setDescription(description);
-    
+
     fields.forEach(function(field) {
         embeededMsg.addField(field[0], field[1]);
     });
